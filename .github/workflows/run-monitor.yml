@@ -1,0 +1,25 @@
+name: run-monitor
+
+on:
+  workflow_dispatch:
+
+jobs:
+  using-var1:
+    runs-on: ubuntu-latest
+    env:
+      APP_ENV: ${{ vars.APP_ENV }}
+    steps:
+      - name: Show variable
+        run: echo "Variable APP_ENV => $APP_ENV"
+
+  using-var2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show variable
+        run: echo "Variable SUPPORT_EMAIL => ${{ vars.SUPPORT_EMAIL }}"
+
+  using-secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show secret
+        run: echo "Secret API_KEY => ${{ secrets.API_KEY }}"
