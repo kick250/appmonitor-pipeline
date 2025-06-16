@@ -1,0 +1,61 @@
+name: diagnostic
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    env:
+      APP_ENV: ${{ vars.APP_ENV }}
+      API_KEY: ${{ secrets.API_KEY }}
+    steps:
+      - name: Check
+        id: check-vars
+        run: |
+          echo "Verificando variáveis..."
+
+          missing=0
+
+          if [ -z "$APP_ENV" ]; then
+            echo "::error::APP_ENV ausente"
+            missing=1
+          else
+            echo "::notice::APP_ENV => $APP_ENV"
+          fi
+
+          if [ -z "$API_KEY" ]; then
+            echo "::error::API_KEY ausente"
+            missing=1
+          else
+            echo "::notice::API_KEY => $API_KEY"
+          fi
+
+          if [ $missing -eq 1 ]; then
+            echo "::error::Algumas variáveis estão ausentes."
+            exit 1
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Job Summary >> $GITHUB_STEP_SUMMARY
+          echo "- OS: \`${{ runner.os }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Verificando variáveis:" >> $GITHUB_STEP_SUMMARY
+
+          if [ -z "${{ vars.APP_ENV }}" ]; then
+            echo "  -\`APP_ENV\`: Vazio" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "  -\`APP_ENV\`: \`${{ vars.APP_ENV }}\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ -z "${{ secrets.API_KEY }}" ]; then
+            echo "  -\`API_KEY\`: Vazio" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "  -\`API_KEY\`: OK" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "### Sugestões para correção" >> $GITHUB_STEP_SUMMARY
+          echo "- Vá em Secrets > variables para definir variáveis ausentes." >> $GITHUB_STEP_SUMMARY
+          echo "- Reexecute o workflow após corrigir os problemas." >> $GITHUB_STEP_SUMMARY
