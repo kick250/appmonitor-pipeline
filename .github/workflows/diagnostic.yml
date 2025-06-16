@@ -39,7 +39,7 @@ jobs:
       - name: Summary
         if: always()
         run: |
-          echo "### Job Summary >> $GITHUB_STEP_SUMMARY
+          echo "### Job Summary" >> $GITHUB_STEP_SUMMARY
           echo "- OS: \`${{ runner.os }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Branch: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Verificando variáveis:" >> $GITHUB_STEP_SUMMARY
